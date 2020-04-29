@@ -91,14 +91,16 @@ class ApiUsersController extends Controller
         $input = $request->all();
         $input['role_id'] = 2;
         $input['company_logo'] = $imageName;
-        $user = User::find($request->userId)->first();
-        $email = $request->email;
+        // $user = User::find($request->userId)->first();
+        // $email = $request->email;
+        $user = User::where('id',$request->userId)->first();
+        $email = $user->email;
         $data = ([
             'name' => $request->name,
             'email' => $user->email,
             'phone' => $request->country_code.' '.$request->phone,
         ]);
-        //\Mail::to($email)->send(new RegistrationEmail($data));
+        \Mail::to($email)->send(new RegistrationEmail($data));
 
         $user = User::updateOrCreate([
             'id'   => $request->userId,
@@ -128,6 +130,7 @@ class ApiUsersController extends Controller
         $user = User::where('email', $request->email)->first();
         if ($user != null) {
             if ($this->attemptLogin($request)) {
+            	// $user = User::where('id', $user->id)->update(['device_login' =>1]);
             	$token = auth()->user()->createToken('apitoken')->accessToken;
 
             	if ($token == '') {

@@ -10,15 +10,15 @@ use Illuminate\Queue\SerializesModels;
 class RegistrationEmail extends Mailable
 {
     use Queueable, SerializesModels;
-    public $name;
+    public $data;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($name)
+    public function __construct($data)
     {
-        $this->name = $name;
+        $this->data = $data;
     }
 
     /**
