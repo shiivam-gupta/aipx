@@ -48,7 +48,7 @@
                             </fieldset>
 
                             <fieldset class="form-group floating-label-form-group mb-1">
-                                <label for="user-password">Enter Captcha</label>
+                                <label for="user-password">Confirm Captcha</label>
                                 <input type="text" class="form-control" name="captcha" id="user-captcha" placeholder="Enter Captcha">
                                 @if ($errors->has('captcha'))
                                     <span class="text-danger">{{ $errors->first('captcha') }}</span>
