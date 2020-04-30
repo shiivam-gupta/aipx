@@ -26,12 +26,19 @@ Route::group(['namespace' => 'Auth', 'prefix' => ''], function () {
     Route::get('/login', 'LoginController@showLoginForm')->name('login');
     Route::post('/login', 'LoginController@login')->name('login.post');
 
+    Route::get('/logout', 'LoginController@logout')->name('customer.logout');
 });
+
 
 Route::middleware(['auth'])->group(function () {
     Route::group(['namespace' => 'Backend', 'prefix' => ''], function () {
+
         Route::get('/company', 'CompanyController@index')->name('company.dashboard');
         Route::get('/customer', 'CustomerController@index')->name('customer.dashboard');
+        
+
+
+
     });
 });
 
