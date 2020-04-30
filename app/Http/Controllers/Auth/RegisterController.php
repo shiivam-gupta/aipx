@@ -121,7 +121,7 @@ class RegisterController extends Controller
             $user = User::create($input);
         }
 
-        return redirect(route('register.form2',$user->id))->with('success', 'Your Account Created Successfully');
+        return redirect(route('register.form2',$user->id))->with('success', 'Register Step 1 completed Successfully.');
     }
 
     protected function showRegistrationForm2($userId)
@@ -184,7 +184,7 @@ class RegisterController extends Controller
         $user = User::updateOrCreate([
             'id'   => $request->userId,
         ],$input);
-        return redirect(route('login'))->with('success', 'Your Account Created Successfully');
+        return redirect(route('login'))->with('success', 'Your Account Created Successfully.');
 
         //return view('backend.auth.register');
     }
