@@ -30,19 +30,19 @@
                 </div>
                 <div class="card-content">
                     <div class="card-body pt-0">
-                        <form class="form-horizontal" action="{{ route('login') }}" method="POST">
+                        <form class="form-horizontal" action="{{ in_array('admin',$urlParam) ? route('admin.login.post') :  route('login') }}" method="POST">
                             @csrf
                             <fieldset class="form-group floating-label-form-group">
-                                <label for="user-name">Your Email</label>
-                                <input type="email" name="email" class="form-control" id="user-name" placeholder="Your Username">
+                                <label for="user-name">Email address</label>
+                                <input type="email" name="email" class="form-control" id="user-name" placeholder="Enter Your Email Address">
                                 @if ($errors->has('email'))
                                     <span class="text-danger">{{ $errors->first('email') }}</span>
                                 @endif
 
                             </fieldset>
                             <fieldset class="form-group floating-label-form-group mb-1">
-                                <label for="user-password">Enter Password</label>
-                                <input type="password" name="password" class="form-control" id="user-password" placeholder="Enter Password">
+                                <label for="user-password">Password</label>
+                                <input type="password" name="password" class="form-control" id="user-password" placeholder="Enter Your Password">
                                 @if ($errors->has('password'))
                                     <span class="text-danger">{{ $errors->first('password') }}</span>
                                 @endif
@@ -59,10 +59,10 @@
                             <button type="submit" class="btn btn-outline-primary btn-block"><i class="feather icon-unlock"></i> Login</button>
                         </form>
                     </div>
-                    <p class="card-subtitle line-on-side text-muted text-center font-small-3 mx-2 my-1"><span>New to
-                            Stack ?</span></p>
+                    <!-- <p class="card-subtitle line-on-side text-muted text-center font-small-3 mx-2 my-1"><span>New to
+                            Stack ?</span></p> -->
                     <div class="card-body">
-                        <a href="{{ route('register') }}" class="btn btn-outline-danger btn-block"><i class="feather icon-user"></i> Register</a>
+                        <a href="{{ route('register') }}" class="btn btn-outline-danger btn-block"><i class="feather icon-user"></i>Sign Up</a>
                     </div>
                 </div>
             </div>

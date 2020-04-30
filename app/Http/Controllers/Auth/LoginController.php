@@ -29,13 +29,17 @@ class LoginController extends Controller
 
     public function showLoginForm()
     {
-        return view('backend.auth.login');
+        $getGement = request()->segments();
+        $data['urlParam'] = $getGement;
+        return view('backend.auth.login')->with($data);
     }
 
     // use AuthenticatesUsers;
     public function login(Request $request)
     {
-        //dd($request->all());
+
+        $getGement = request()->segments();
+
         $this->validateLogin($request);
 
         if (method_exists($this, 'hasTooManyLoginAttempts') &&
@@ -44,7 +48,13 @@ class LoginController extends Controller
 
             return $this->sendLockoutResponse($request);
         }
-        $user = User::where('email', $request->email)->first();
+
+
+        if(!in_array('admin', $getGement)){
+            $user = User::where('email', $request->email)->where('role_id','!=',1)->first();
+        } else {
+            $user = User::where('email', $request->email)->where('role_id',1)->first();
+        }
         if ($user != null) {
             if ($user->device_login == 0) {
                 //if ($user->userType == $request->userType) {
@@ -59,8 +69,7 @@ class LoginController extends Controller
                 return back()->with('error', 'You have already login somewhere.');
             }
         } else {
-            return back()->with('notFound', 'Email not found in our record.');
-
+            return back()->with('error', 'Email not found in our record.');
         }
 
         // If the login attempt was unsuccessful we will increment the number of attempts
@@ -107,6 +116,7 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
+        $userLoginDeviceLog = User::where('id', Auth::id())->update(['device_login' =>'0']);
         $this->guard()->logout();
 
         $request->session()->invalidate();
@@ -133,6 +143,8 @@ class LoginController extends Controller
     {
         if($user->role_id == 2){
             return redirect(route('company.dashboard'));
+        }else if($user->role_id == 1){
+            return redirect(route('admin.dashboard'));
         } else {
 
             return redirect(route('customer.dashboard'));

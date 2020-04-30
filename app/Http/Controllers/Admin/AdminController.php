@@ -10,7 +10,8 @@ use DataTables;
 class AdminController extends Controller
 {
     public function index(){
-    	return view('users.admin.index');	
+        // dd('aaaaaaa');
+    	return view('backend.dashboard.dashboard');	
     }
 
     public function showUsersDetaisl(Request $request)

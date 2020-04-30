@@ -12,14 +12,6 @@
                     </div>
                     <h6 class="card-subtitle line-on-side text-muted text-center font-small-3 pt-2"><span>Easily
                             Using</span></h6> --}}
-                    @if(Session::has('success'))
-                        <div class="alert alert-success">
-                            {{ Session::get('success') }}
-                            @php
-                            Session::forget('success');
-                            @endphp
-                        </div>
-                    @endif
                 </div>
                 <div class="card-content">
                     <div class="card-body text-center">
@@ -30,29 +22,33 @@
                             @csrf
                             <input type="hidden" name="userId" value="{{ $userId }}">
                             <fieldset class="form-group floating-label-form-group">
-                                <label for="user-name">Name</label>
-                                <input type="text" name="name" class="form-control" id="user-name" placeholder="Enter Your Name" value="{{ old('name') }}">
+                                <label for="user-name">Full name</label>
+                                <input type="text" name="name" class="form-control" id="user-name" placeholder="Enter Your Full Name" value="{{ old('name') }}">
                                 @if ($errors->has('name'))
                                     <span class="text-danger">{{ $errors->first('name') }}</span>
                                 @endif
                             </fieldset>
                             <fieldset class="form-group floating-label-form-group">
-                                <label for="user-code">Country Code</label>
-                                <select class="form-control" id="user-code" name="country_code">
-                                    @foreach($country_code as $key => $value)
-                                        <option value="{{ $value->code }}" {{ $value->code == old('country_code') ? 'selected' : ''}}>{{ $value->code }}</option>
-                                    @endforeach
-                                </select>
-                                @if ($errors->has('country_code'))
-                                    <span class="text-danger">{{ $errors->first('country_code') }}</span>
-                                @endif
-                            </fieldset>
-                            <fieldset class="form-group floating-label-form-group">
-                                <label for="user-phone">Phone Number</label>
-                                <input type="text" name="phone" class="form-control" id="user-phone" placeholder="Enter Your Number" value="{{ old('phone') }}">
-                                @if ($errors->has('phone'))
-                                    <span class="text-danger">{{ $errors->first('phone') }}</span>
-                                @endif
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="user-code">Country Code</label>
+                                        <select class="form-control" id="user-code" name="country_code">
+                                            @foreach($country_code as $key => $value)
+                                                <option value="{{ $value->code }}" {{ $value->code == old('country_code') ? 'selected' : ''}}>{{ $value->code }}</option>
+                                            @endforeach
+                                        </select>
+                                        @if ($errors->has('country_code'))
+                                            <span class="text-danger">{{ $errors->first('country_code') }}</span>
+                                        @endif
+                                    </div>
+                                    <div class="col-md-8">
+                                        <label for="user-phone">Phone Number</label>
+                                        <input type="text" name="phone" class="form-control" id="user-phone" placeholder="Enter Your Number" value="{{ old('phone') }}">
+                                        @if ($errors->has('phone'))
+                                            <span class="text-danger">{{ $errors->first('phone') }}</span>
+                                        @endif
+                                    </div>
+                                </div>
                             </fieldset>
                             <fieldset class="form-group floating-label-form-group">
                                 <label for="company_name">Company Name</label>
@@ -98,16 +94,64 @@
                             </fieldset>
                             <fieldset class="form-group floating-label-form-group">
                                 <label for="lunch_punch_hours">Auto Lunch Punch Hours</label>
-
-                                <select class="form-control" id="user-code" name="lunch_punch_hours">
-                                    <option value="">None</option>
-                                    @foreach($lunch_hours as $key => $value)
-                                        <option value="{{ $value }}" {{ $value == old('lunch_punch_hours') ? 'selected' : ''}}>{{ $value }}</option>
-                                    @endforeach
-                                </select>
-                                @if ($errors->has('lunch_punch_hours'))
-                                    <span class="text-danger">{{ $errors->first('lunch_punch_hours') }}</span>
-                                @endif
+                                <div class="row">
+                                    <div class="col-md-1"></div>
+                                    <div class="col-md-5">
+                                        <label class="form-check-label">    
+                                            <input type="radio" class="form-check-input forDisable" name="lunch_punch_hours_status" value="disable">Disable
+                                        </label>
+                                    </div>
+                                    <div class="col-md-1"></div>
+                                    <div class="col-md-5">
+                                        <label class="form-check-label">
+                                            <input type="radio" class="form-check-input forEnable" name="lunch_punch_hours_status" value="enable">
+                                            Enable
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        
+                                            @if ($errors->has('lunch_punch_hours_status'))
+                                                <span class="text-danger">{{ $errors->first('lunch_punch_hours_status') }}</span>
+                                            @endif
+                                        
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row hideorshow d-none">
+                                    <div class="col-md-6">
+                                        <label for="lunch_punch_hours">Hours</label>
+                                        <select class="form-control" id="user-code" name="lunch_punch_hours">
+                                            <option value="">None</option>
+                                            <!-- @foreach($lunch_hours as $key => $value)
+                                                <option value="{{ $value }}" {{ $value == old('lunch_punch_hours') ? 'selected' : ''}}>{{ $value }}</option>
+                                            @endforeach -->
+                                            @foreach(range(0,24) as $number)
+                                                <option value="{{ $number }}" {{ $number == old('lunch_punch_hours') ? 'selected' : ''}}>{{ $number }}</option>
+                                            @endforeach
+                                        </select>
+                                        @if ($errors->has('lunch_punch_hours'))
+                                            <span class="text-danger">{{ $errors->first('lunch_punch_hours') }}</span>
+                                        @endif
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="lunch_punch_hours">Minutes</label>
+                                        <select class="form-control" id="user-code" name="lunch_punch_minute">
+                                            <option value="">None</option>
+                                            <!-- @foreach($lunch_hours as $key => $value)
+                                                <option value="{{ $value }}" {{ $value == old('lunch_punch_minute') ? 'selected' : ''}}>{{ $value }}</option>
+                                            @endforeach -->
+                                            
+                                            @foreach(range(0,60) as $number)
+                                                <option value="{{ $number }}" {{ $number == old('lunch_punch_minute') ? 'selected' : ''}}>{{ $number }}</option>
+                                            @endforeach
+                                        </select>
+                                        @if ($errors->has('lunch_punch_minute'))
+                                            <span class="text-danger">{{ $errors->first('lunch_punch_minute') }}</span>
+                                        @endif
+                                    </div>
+                                </div>
                             </fieldset>
 
                             <fieldset class="form-group floating-label-form-group">
@@ -127,9 +171,9 @@
                             <button type="submit" class="btn btn-outline-primary btn-block"><i class="feather icon-user"></i> Register</button>
                         </form>
                     </div>
-                    <div class="card-body pt-0">
+                    <!-- <div class="card-body pt-0">
                         <a href="{{ route('login') }}" class="btn btn-outline-danger btn-block"><i class="feather icon-unlock"></i> Login</a>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -137,4 +181,15 @@
 @endsection
 
 @section('after-scripts')
+    <script type="text/javascript">
+        
+        $(document).on('click','.forEnable',function(e) {
+
+            $(".hideorshow").removeClass('d-none');
+        });
+        $(document).on('click','.forDisable',function(e) {
+
+            $(".hideorshow").addClass('d-none');
+        });
+    </script>
 @endsection
