@@ -138,6 +138,7 @@ class ApiUsersController extends Controller
 			        	return response()->json(['errors'=>'Unable to generate token','code'=>401,'status'=>'failed','data'=>[]],401);
 			        }else{
 			        	$user['access_token'] = $token;
+			        	$user['device_login'] = $userLoginDevice;
 			        	return response()->json(['data'=>$user,'code'=>200,'status'=>'success','errors'=>''],200);
 			        }
 	                // return $this->sendLoginResponse($request);

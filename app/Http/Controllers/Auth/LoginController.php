@@ -46,13 +46,18 @@ class LoginController extends Controller
         }
         $user = User::where('email', $request->email)->first();
         if ($user != null) {
-            //if ($user->userType == $request->userType) {
-            if ($this->attemptLogin($request)) {
-                return $this->sendLoginResponse($request);
+            if ($user->device_login == 0) {
+                //if ($user->userType == $request->userType) {
+                if ($this->attemptLogin($request)) {
+                    $userLoginDevice = User::where('id', $user->id)->update(['device_login' =>1]);
+                    return $this->sendLoginResponse($request);
+                }
+                // } else {
+                //     return back()->with('notFound', 'Email not found in our record.');
+                // }
+            }else{
+                return back()->with('error', 'You have already login somewhere.');
             }
-            // } else {
-            //     return back()->with('notFound', 'Email not found in our record.');
-            // }
         } else {
             return back()->with('notFound', 'Email not found in our record.');
 

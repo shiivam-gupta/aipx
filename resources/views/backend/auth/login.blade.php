@@ -15,6 +15,12 @@
                             @endphp
                         </div>
                     @endif
+                    @if ($message = Session::get('error'))
+                        <div class="alert alert-danger alert-block">
+                            <button type="button" class="close" data-dismiss="alert">×</button> 
+                            <strong>{{ $message }}</strong>
+                        </div>
+                    @endif
                     <div class="card-title text-center">
                         Login Form
                         {{-- <div class="p-1"><img src="{{ asset('app-assets/images/logo/stack-logo-dark.png')}}" alt="branding logo"></div> --}}
