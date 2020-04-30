@@ -92,14 +92,16 @@ class ApiUsersController extends Controller
         $input = $request->all();
         $input['role_id'] = 2;
         $input['company_logo'] = $imageName;
-        $user = User::find($request->userId)->first();
-        $email = $request->email;
+        // $user = User::find($request->userId)->first();
+        // $email = $request->email;
+        $user = User::where('id',$request->userId)->first();
+        $email = $user->email;
         $data = ([
             'name' => $request->name,
             'email' => $user->email,
             'phone' => $request->country_code.' '.$request->phone,
         ]);
-        //\Mail::to($email)->send(new RegistrationEmail($data));
+        \Mail::to($email)->send(new RegistrationEmail($data));
 
         $user = User::updateOrCreate([
             'id'   => $request->userId,
@@ -128,17 +130,23 @@ class ApiUsersController extends Controller
         }
         $user = User::where('email', $request->email)->first();
         if ($user != null) {
-            if ($this->attemptLogin($request)) {
-            	$token = auth()->user()->createToken('apitoken')->accessToken;
+        	if ($user->device_login == 0) {
+        		if ($this->attemptLogin($request)) {
+	            	$userLoginDevice = User::where('id', $user->id)->update(['device_login' =>1]);
+	            	$token = auth()->user()->createToken('apitoken')->accessToken;
 
-            	if ($token == '') {
-		        	return response()->json(['errors'=>'Unable to generate token','code'=>401,'status'=>'failed','data'=>[]],401);
-		        }else{
-		        	$user['access_token'] = $token;
-		        	return response()->json(['data'=>$user,'code'=>200,'status'=>'success','errors'=>''],200);
-		        }
-                // return $this->sendLoginResponse($request);
-            }
+	            	if ($token == '') {
+			        	return response()->json(['errors'=>'Unable to generate token','code'=>401,'status'=>'failed','data'=>[]],401);
+			        }else{
+			        	$user['access_token'] = $token;
+			        	$user['device_login'] = $userLoginDevice;
+			        	return response()->json(['data'=>$user,'code'=>200,'status'=>'success','errors'=>''],200);
+			        }
+	                // return $this->sendLoginResponse($request);
+	            }	
+        	}else{
+        		return response()->json(['errors'=>'You have already login somewhere','code'=>401,'status'=>'failed','data'=>[]],401);
+        	}
         } else {
         	return response()->json(['errors'=>'Email not found in our record','code'=>401,'status'=>'failed','data'=>[]],401);
         }

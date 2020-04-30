@@ -87,6 +87,7 @@ class RegisterController extends Controller
             'password' => 'required|min:8|max:30',
             'confirm_password' => 'same:password',
             'captcha' => 'same:confirm_captcha',
+            'aggrement' => 'required',
 
         ]);
 
@@ -121,14 +122,13 @@ class RegisterController extends Controller
             $user = User::create($input);
         }
 
-        return redirect(route('register.form2',$user->id))->with('success', 'Register Step 1 completed Successfully.');
+        return redirect(route('register.form2',base64_encode($user->id)))->with('success', 'Register Step 1 completed Successfully.');
     }
 
     protected function showRegistrationForm2($userId)
     {
-        //dd($userId);
         $data = [];
-        $data['userId'] = $userId;
+        $data['userId'] = base64_decode($userId);
         $data['country_code'] = Country::get();
         $data['lunch_hours'] = array('15 Minutes','30 Minutes','45 Minutes','1 Hour','1 Hour 15 minutes','1 Hour 30 minutes','1 Hour 45 Minutes','2 Hours');
         $data['week_start'] = array('Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday');
@@ -138,7 +138,8 @@ class RegisterController extends Controller
 
     public function storeRegistrationStep2(Request $request)
     {
-        //dd($request->all());
+        // dd($request->all());
+        // dd($request->lunch_punch_hours.$request->lunch_punch_minute);
         $validator = Validator::make($request->all(),[
 
             'name' => 'required|min:2|max:60',
@@ -149,14 +150,16 @@ class RegisterController extends Controller
             'pay_rate' => 'required|numeric|min:0|max:1000',
             'vacation_hours' => 'required|numeric|min:0|max:1000',
             'sick_hours' => 'required|numeric|min:0|max:1000',
-            'lunch_punch_hours' => 'required',
+            //'lunch_punch_hours' => 'required',
+            'lunch_punch_minute' => 'required',
             'week_start' => 'required',
+            'lunch_punch_hours_status' => 'required',
             'company_logo' => 'required|image|max:2999|mimes:jpeg,jpg,png,jfif',
 
         ]);
 
         if ($validator->fails()) {
-            return redirect(route('register.form2',$request->userId))
+            return redirect(route('register.form2',base64_encode($request->userId)))
                         ->withErrors($validator)
                         ->withInput();
         }
@@ -172,6 +175,8 @@ class RegisterController extends Controller
         //$input['password'] = Hash::make($input['password']);
         //dd($input);
         $input['company_logo'] = $imageName;
+        $input['lunch_punch_hours'] = ($request->lunch_punch_hours ? $request->lunch_punch_hours : '00') .':'. ($request->lunch_punch_minute ? $request->lunch_punch_minute : '00' ) .':'. '00';
+        $input['lunch_punch_hours_status'] = $request->lunch_punch_hours_status;
         $user = User::find($request->userId)->first();
         $email = $request->email;
         $data = ([

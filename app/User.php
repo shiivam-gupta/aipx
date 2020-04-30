@@ -21,7 +21,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name', 'email', 'password', 'country_code', 'phone', 'profile_pic', 'company_name', 'company_logo',
-        'currency', 'pay_rate', 'role_id', 'vacation_hours', 'sick_hours', 'lunch_punch_hours','week_start','device_name', 'device_id', 'device_model', 'device_token', 'status', 'email_verified_at'
+        'currency', 'pay_rate', 'role_id', 'vacation_hours', 'sick_hours', 'lunch_punch_hours','week_start','device_name', 'device_id', 'device_model', 'device_token', 'status', 'email_verified_at','device_login','lunch_punch_hours_status'
     ];
 
     /**
