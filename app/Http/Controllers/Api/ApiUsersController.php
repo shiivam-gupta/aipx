@@ -18,6 +18,7 @@ use Illuminate\Validation\ValidationException;
 class ApiUsersController extends Controller
 {
     public function registerStep1(Request $request){
+        
     	$validator = Validator::make($request->all(),[
             'email' => 'required|email',
             'password' => 'required|min:8|max:30',
